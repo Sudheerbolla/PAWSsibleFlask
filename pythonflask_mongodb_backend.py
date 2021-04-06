@@ -4,12 +4,12 @@ from bson.objectid import ObjectId
 from datetime import datetime
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb+srv://sudheer:sudheer@cluster0.4agbj.mongodb.net/pawssible?retryWrites=true&w=majority"
+# app.config["MONGO_URI"] = "mongodb+srv://username:password@cluster0.4agbj.mongodb.net/pawssible?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
 
 @app.route('/')
-def init():                            # this is a comment. You can create your own function name
+def init():
     return '<h1> {} </h1>'.format(__name__)
 
 
@@ -19,10 +19,7 @@ def init():                            # this is a comment. You can create your 
 @app.route('/users/login', methods=['POST'])
 def performLogin():
     users = mongo.db.users
-    # app.logger.info('%s email', request.json)
-    # email = request.json['email']
-    # password = request.json['password']
-    
+
     output = []
     
     user = users.find_one({'email': request.json['email'],'password':request.json['password']})
@@ -57,6 +54,7 @@ def performRegistration():
     else:
         return jsonify({'success' : False, "message":"User with email already exists"})
     return jsonify({'success' : False, "message":"Something went wrong"})
+    
     
 # Update or edit user
 @app.route('/users/updateuser', methods=['POST'])
@@ -113,7 +111,7 @@ def getAllDogs():
         output.append(serialize(dog))
     return jsonify({'dogs': output})
 
-
+# Querying with filters
 @app.route('/dogs/filter/<maxprice>', methods=['GET'])
 def getAllDogsFilter(maxprice):
     max=float(maxprice)
